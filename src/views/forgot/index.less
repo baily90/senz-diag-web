@@ -1,0 +1,37 @@
+.container-login {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  .icon-app {
+    display: flex;
+    margin-bottom: 30px;
+    width: 172px;
+    height: 63px;
+  }
+  .form-login {
+    width: 100%;
+    .input-wrap {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      &.code {
+        align-items: flex-start;
+        gap: 8px;
+        .input-code {
+        flex: 1;
+        }
+      }
+      .btn-code {
+        width: 120px;
+      }
+
+    }
+    .btn-reset, .btn-login {
+      width: 100%;
+    }
+    .btn-login {
+      margin: 20px auto 0;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.container-login {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  .icon-app {
+    display: flex;
+    margin-bottom: 30px;
+    width: 172px;
+    height: 63px;
+  }
+  .form-login {
+    width: 100%;
+    .input-wrap {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      &.captcha {
+        align-items: flex-start;
+        gap: 8px;
+        .input-captcha {
+        flex: 1;
+        }
+        .img-captcha {
+          width: 120px;
+          height: 40px;
+          flex-shrink: 0;
+        }
+      }
+      &.remember {
+        align-items: center;
+      }
+
+    }
+    .btn-login {
+      margin-top: 20px;
+      width: 100%;
+    }
+  }
+}
