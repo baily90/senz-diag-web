@@ -11,8 +11,7 @@ export const useAppStore = defineStore('app', () => {
   const avator = ref(null)
   const router = useRouter()
 
-  const tokenInvalid = (path = '/') => {
-    token.value = null
+  const requestInvalidRedirect = (path = '/') => {
     router.replace(path)
   }
 
@@ -23,7 +22,7 @@ export const useAppStore = defineStore('app', () => {
     isRember,
     name,
     avator,
-    tokenInvalid
+    requestInvalidRedirect
   }
 },
 {

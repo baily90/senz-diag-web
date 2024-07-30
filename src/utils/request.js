@@ -27,13 +27,14 @@ service.interceptors.response.use((response) => {
     if ([0, 200].includes(response.data?.code)) { // [0, 200] 成功
       return response.data
     } else {
-      const { tokenInvalid } = useAppStore()
+      const { requestInvalidRedirect } = useAppStore()
       if ([400, 40001, 105001002].includes(response.data?.code)) {
         // [400, 40001, 105001002] token失效 到/login
-        tokenInvalid('/user/login')
+        token.value = null
+        requestInvalidRedirect('/user/login')
       } else if ([401000000, 403000000].includes(response.data?.code)) {
         // [401000000, 403000000] 到 /
-        tokenInvalid('/')
+        requestInvalidRedirect('/')
       }
       ElMessage({
         message: response.data.msg || '数据异常',
