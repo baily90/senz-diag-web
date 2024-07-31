@@ -41,9 +41,9 @@ let remainInterval, timerInterval
 const time = ref(30) // 30s倒计时
 const remainTime = ref(0) // 报告剩余处理时间（秒）
 
-watch(() => report.value?.remain_time, (val) => {
-  if (val) {
-    remainTime.value = val - 50
+watch(() => report.value, (val) => {
+  if (val?.remain_time) {
+    remainTime.value = val?.remain_time - 50
     setRemainCountDown()
   }
 })

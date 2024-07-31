@@ -40,7 +40,6 @@
 
       <!-- 报告出具规则 -->
       <ReportRule>
-        <!-- <el-button type="primary" plain>报告出具规则</el-button> -->
         <el-button link style="color:#fff;text-decoration: underline;">报告出具规则</el-button>
       </ReportRule>
     </div>

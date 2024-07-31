@@ -1,5 +1,9 @@
 <template>
   report
+
+  <!-- 扫查留言 -->
+  <ScanCommentDialog />
+  <!-- 超时提示 -->
   <TimeoutTips />
 </template>
 
@@ -10,6 +14,7 @@ import API from '@/api/report'
 import { useRoute, useRouter } from 'vue-router'
 import { useReportStore } from '@/store/report'
 import TimeoutTips from './components/TimeoutTips/index.vue'
+import ScanCommentDialog from './components/ScanCommentDialog/index.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -29,7 +34,6 @@ const getEditReportInfo = async () => {
       report.value = data
     }
   } catch (error) {
-
   } finally {
     loading.value = false
   }

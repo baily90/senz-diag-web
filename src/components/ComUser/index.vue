@@ -181,9 +181,3 @@ const onSubmitHandle = async () => {
 }
 
 </script>
-
-<style lang='less' scoped>
-  .container-user {
-
-  }
-</style>
