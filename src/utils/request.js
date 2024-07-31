@@ -30,6 +30,8 @@ service.interceptors.response.use((response) => {
       const { requestInvalidRedirect } = useAppStore()
       if ([400, 40001, 105001002].includes(response.data?.code)) {
         // [400, 40001, 105001002] token失效 到/login
+        const appStore = useAppStore()
+        const { token } = storeToRefs(appStore)
         token.value = null
         requestInvalidRedirect('/user/login')
       } else if ([401000000, 403000000].includes(response.data?.code)) {

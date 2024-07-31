@@ -123,7 +123,7 @@ const loginFormRules = {
     },
     {
       validator: (rule, value, callback) => {
-        if(!/^[A-Za-z0-9]{6,18}$/.test(value)) {
+        if (!/^[A-Za-z0-9]{6,18}$/.test(value)) {
           callback(new Error('密码格式不符合要求'))
         }
         callback()

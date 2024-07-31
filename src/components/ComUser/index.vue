@@ -33,8 +33,6 @@
           <el-button style="width: 100%" type="primary" :loading="isLoading" @click="onSubmitHandle">确认修改</el-button>
         </el-form-item>
       </el-form>
-      <!-- <template #footer>
-      </template> -->
     </el-dialog>
   </div>
 </template>
@@ -47,6 +45,7 @@ import { useAppStore } from '@/store/app'
 import { storeToRefs } from 'pinia'
 import { useAsyncState } from '@vueuse/core'
 import API from '@/api/user'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const appStore = useAppStore()
 const {
@@ -66,7 +65,7 @@ const formRef = ref()
 const formData = ref({
   old_password: undefined,
   new_password: undefined,
-  confirm_password: undefined,
+  confirm_password: undefined
 })
 
 const rules = ref({
@@ -78,7 +77,7 @@ const rules = ref({
     },
     {
       validator: (rule, value, callback) => {
-        if(!/^[A-Za-z0-9]{6,18}$/.test(value)) {
+        if (!/^[A-Za-z0-9]{6,18}$/.test(value)) {
           callback(new Error('原密码格式不符合要求'))
         }
         callback()
@@ -94,7 +93,7 @@ const rules = ref({
     },
     {
       validator: (rule, value, callback) => {
-        if(!/^[A-Za-z0-9]{6,18}$/.test(value)) {
+        if (!/^[A-Za-z0-9]{6,18}$/.test(value)) {
           callback(new Error('密码格式不符合要求'))
         }
         callback()
@@ -117,7 +116,7 @@ const rules = ref({
       },
       trigger: 'blur'
     }
-  ],
+  ]
 })
 
 watch(isDialogVisible, () => {
@@ -143,7 +142,7 @@ const onChangePassword = () => {
   isDialogVisible.value = true
 }
 
-const onLogout = async() => {
+const onLogout = async () => {
   try {
     await ElMessageBox.confirm(
       '确认要退出登录吗？退出登录后会将您名下的报告分配给其他医生。',
@@ -177,7 +176,7 @@ const onSubmitHandle = async () => {
       })
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 

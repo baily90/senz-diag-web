@@ -57,9 +57,7 @@ const {
 
 const route = useRoute()
 
-const activeMenu = computed(() => {
-  return route.path
-})
+const activeMenu = computed(() => route.path)
 </script>
 
 <style lang='less' scoped>

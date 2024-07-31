@@ -11,43 +11,36 @@
       </ComUser>
     </div>
     <div class="check-info">
-      <div class="patient-info">
-        <div class="patient-info-item">
-          <div class="label">患者姓名</div>
-          <div class="value">文刘璀瑶</div>
-        </div>
-        <div class="patient-info-item">
-          <div class="label">性别</div>
-          <div class="value">女</div>
-        </div>
-        <div class="patient-info-item">
-          <div class="label">年龄</div>
-          <div class="value">28岁</div>
-        </div>
-        <div class="patient-info-item">
-          <div class="label">检查项目</div>
-          <div class="value">甲状腺检查</div>
-        </div>
-        <div class="patient-info-item">
-          <div class="label">检查时间</div>
-          <div class="value">2020/10/23 13:26:19</div>
-        </div>
-      </div>
+      <!-- 患者信息 -->
+      <PatientInfo />
+
       <!-- 疑难报告 -->
-      <!-- ((!is_history && !is_withdraw) || (is_history && !!is_danger)) -->
+      <!-- isHistory: 是否是历史报告 true/false，is_withdraw：是否是已撤回报告 0正常报告 1撤回报告，is_danger：是否是疑难报告 0否 1是 -->
+      <!-- ((!report?.isHistory && !report?.is_withdraw) || (report?.isHistory && !!report?.check?.is_danger)) -->
+      <!-- <DangerCheckbox v-if="(!report?.isHistory && !report?.is_withdraw) || (report?.isHistory && !!report?.check?.is_danger)" /> -->
+      <DangerCheckbox />
 
       <!-- 全部正常 -->
       <!-- 全部正常-通用、肠系膜淋巴结部位并且报告详情 不显示全部正常按钮 -->
-      <!-- ![4, 5, 7].includes(body_region_id) && !is_history && isStruct !== 1 -->
+      <!-- ![4, 5, 7].includes(report?.check?.body_region_id) && !report?.isHistory && !report?.isStruct -->
+      <!-- <OneKeyNormal v-if="![4, 5, 7].includes(report?.check?.body_region_id) && !report?.isHistory && !report?.isStruct" /> -->
+      <OneKeyNormal />
 
       <!-- 历史病例 -->
-      <!-- patientReport === 1 -->
+      <!-- patientReport：是否显示患者历史病例 0不显示 1显示 -->
+      <!-- !!report?.patientReport -->
+      <!-- <PatientCase v-if="!!report?.patientReport" /> -->
+      <PatientCase />
 
       <!-- 作废报告 -->
-      <!-- nullifyAccess === 1 && !is_history  -->
+      <!-- nullifyAccess：是否有作废权限 0没有 1有 -->
+      <!-- !!report?.nullifyAccess && !report?.isHistory  -->
+      <!-- <DestoryReport v-if="!!report?.nullifyAccess && !report?.isHistory" /> -->
+       <DestoryReport />
 
       <!-- 报告出具规则 -->
       <ReportRule>
+        <!-- <el-button type="primary" plain>报告出具规则</el-button> -->
         <el-button link style="color:#fff;text-decoration: underline;">报告出具规则</el-button>
       </ReportRule>
     </div>
@@ -57,11 +50,22 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/store/app'
+import { useReportStore } from '@/store/report'
 import ComUser from '@/components/ComUser/index.vue'
 import ReportRule from '@/components/ReportRule/index.vue'
 import { User } from '@element-plus/icons-vue'
+import PatientInfo from './components/PatientInfo/index.vue'
+import DangerCheckbox from './components/DangerCheckbox/index.vue'
+import OneKeyNormal from './components/OneKeyNormal/index.vue'
+import PatientCase from './components/PatientCase/index.vue'
+import DestoryReport from './components/DestoryReport/index.vue'
 
 const appStore = useAppStore()
+const reportStore = useReportStore()
+const {
+  report,
+  loading
+} = storeToRefs(reportStore)
 const {
   name
 } = storeToRefs(appStore)
@@ -72,32 +76,6 @@ defineProps({
     default: () => ['home', 'history', 'update', 'logout']
   }
 })
-
-const goHome = () => router.push('/')
-
-const onHistory = () => router.push('/history')
-
-const onUpdate = () => {
-  // 修改密码
-}
-
-const onLogout = async() => {
-  try {
-    await ElMessageBox.confirm(
-      '确认要退出登录吗？退出登录后会将您名下的报告分配给其他医生。',
-      '退出登录',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    token.value = null
-    router.replace('/user/login')
-  } catch (error) {
-
-  }
-}
 
 </script>
 
@@ -110,7 +88,6 @@ const onLogout = async() => {
     height: 112px;
     padding: 0 40px;
     color: #FFFFFF;
-    // background-color: rgba(255, 255, 255, .3);
     .report-title {
       display: flex;
       align-items: center;
@@ -124,26 +101,6 @@ const onLogout = async() => {
       display: flex;
       align-items: flex-end;
       gap: 20px;
-      .patient-info {
-        display: flex;
-        gap: 40px;
-        .patient-info-item {
-          display: flex;
-          flex-flow: column nowrap;
-          align-items: flex-start;
-          .label {
-            margin-bottom: 3px;
-            font-size: 13px;
-            color: #CFE9FF;
-            line-height: 18px;
-          }
-          .value {
-            font-size: 16px;
-            color: #FFFFFF;
-            line-height: 22px;
-          }
-        }
-      }
     }
   }
 </style>

@@ -2,7 +2,7 @@
   <div class="container-layout-report">
     <ReportHeader />
     <div class="report-content">
-      <RouterView v-slot="{ Component }">
+      <RouterView v-slot="{ Component }" :key="route.fullPath">
         <Suspense>
           <!-- 主要内容 -->
           <component :is="Component"></component>
@@ -17,7 +17,10 @@
 </template>
 
 <script setup>
+import { RouterView, useRoute } from 'vue-router'
 import ReportHeader from '@/components/ReportHeader/index.vue'
+
+const route = useRoute()
 </script>
 
 <style lang='less' scoped>

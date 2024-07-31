@@ -18,7 +18,7 @@ import breastDifenxian from '@/assets/image/reportRule/rules_breast-difenxian.jp
 import breastZhongfenxian from '@/assets/image/reportRule/rules_breast-zhongfenxian.jpg'
 import breastGaofenxian from '@/assets/image/reportRule/rules_breast-gaofenxian.jpg'
 
-export const rules = [
+export default [
   {
     name: '甲状腺',
     key: 1,
