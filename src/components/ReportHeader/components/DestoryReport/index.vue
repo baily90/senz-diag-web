@@ -8,7 +8,7 @@
       destroy-on-close
       center
     >
-      <el-form ref="formRef"  :model="formData">
+      <el-form ref="formRef" :model="formData">
         <el-form-item label="作废类型" prop="nullify_map_id" :rules="[{ required: true, message: '请选择作废类型', trigger: 'change' }]">
           <el-select v-model="formData.nullify_map_id" placeholder="请选择作废类型" clearable>
             <el-option v-for="option in destoryTypeOptions" :label="option.label" :value="option.value" :key="option.value" />
