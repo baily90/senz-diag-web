@@ -94,6 +94,7 @@ defineProps({
       .hospital-name {
         font-weight: 600;
         font-size: 19px;
+        color: #FFFFFF;
       }
     }
     .check-info {

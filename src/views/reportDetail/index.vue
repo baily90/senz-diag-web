@@ -1,6 +1,14 @@
 <template>
-  reportDetail
-
+  <ReportMain>
+    <template #media>
+      media
+    </template>
+    <template #form>
+      <div class="report-detail">
+        <div v-html="report?.report_detail_html"></div>
+      </div>
+    </template>
+  </ReportMain>
 </template>
 
 <script setup>
@@ -8,6 +16,7 @@ import { storeToRefs } from 'pinia'
 import API from '@/api/report'
 import { useRoute, useRouter } from 'vue-router'
 import { useReportStore } from '@/store/report'
+import ReportMain from '@/components/ReportMain/index.vue'
 
 const route = useRoute()
 
@@ -37,5 +46,10 @@ getReportDetailInfo()
 </script>
 
 <style lang="less" scoped>
-
+.report-detail {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>

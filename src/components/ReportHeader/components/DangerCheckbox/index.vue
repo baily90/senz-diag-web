@@ -24,6 +24,7 @@ watch(() => report.value, (val) => {
 })
 
 const onIsDangerChange = async (val) => {
+  report.value.check.is_danger = val
   if (val) {
     try {
       await ElMessageBox.confirm(

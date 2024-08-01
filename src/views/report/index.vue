@@ -1,5 +1,12 @@
 <template>
-  report
+  <ReportMain>
+    <template #media>
+      <ReportMedia />
+    </template>
+    <template #form>
+      form
+    </template>
+  </ReportMain>
 
   <!-- 扫查留言 -->
   <ScanCommentDialog />
@@ -13,6 +20,8 @@ import { ref } from 'vue'
 import API from '@/api/report'
 import { useRoute, useRouter } from 'vue-router'
 import { useReportStore } from '@/store/report'
+import ReportMain from '@/components/ReportMain/index.vue'
+import ReportMedia from './components/ReportMedia/index.vue'
 import TimeoutTips from './components/TimeoutTips/index.vue'
 import ScanCommentDialog from './components/ScanCommentDialog/index.vue'
 
