@@ -50,9 +50,13 @@ const getEditReportInfo = async () => {
 getEditReportInfo()
 
 // 离开诊断要把当前报告取消诊断放回需求池，否则会占用报告分配的诊断时长（默认十分钟）
+// 这里要排除一些异常情况，比如某些接口逻辑需要跳转到登录或者首页，这里要剔除掉否则会死循环
 onBeforeRouteLeave(async (to, from, next) => {
+  const isInterceptedByError = to.query.interceptedByError
   try {
-    await API.cancleReport({ diag_id: report.value?.diag_id })
+    if (!isInterceptedByError) {
+      await API.cancleReport({ diag_id: report.value?.diag_id })
+    }
   } catch (error) {
   } finally {
     next()

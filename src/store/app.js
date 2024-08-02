@@ -12,7 +12,7 @@ export const useAppStore = defineStore('app', () => {
   const router = useRouter()
 
   const requestInvalidRedirect = (path = '/') => {
-    router.replace(path)
+    router.replace({ path, query: { interceptedByError: true } })
   }
 
   return {

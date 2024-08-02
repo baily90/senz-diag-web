@@ -92,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     if (!['/user/login', '/user/forgot'].includes(to.path)) {
-      next('/user/login')
+      next({ path: '/user/login', query: { interceptedByError: true } })
     } else {
       next()
     }

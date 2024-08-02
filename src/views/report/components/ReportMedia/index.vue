@@ -9,6 +9,17 @@
         <el-image v-if="source.source_type === 1" class="select" style="width: 24px; height: 22px" :src="source.selected ? IconSelected : IconUnSelected"></el-image>
       </div>
     </div>
+    <div class="media-check">
+      <el-button-group>
+        <el-button :icon="EditPen">测量</el-button>
+        <el-button :icon="Crop">截图</el-button>
+        <el-button :icon="Delete">清除</el-button>
+      </el-button-group>
+      <div class="media">
+        media
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -19,6 +30,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useReportStore } from '@/store/report'
 import IconSelected from '@/assets/image/icon_selected.png'
 import IconUnSelected from '@/assets/image/icon_unselected.png'
+import { EditPen, Crop, Delete } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
@@ -35,6 +47,7 @@ const {
 
 <style lang="less" scoped>
 .container-report-media {
+  display: flex;
   width: 100%;
   height: 100%;
   .media-list {
@@ -87,6 +100,12 @@ const {
         right: -2px;
       }
     }
+  }
+  .media-check {
+    flex: 1;
+    width: 100%;
+    padding: 10px 0;
+
   }
 }
 </style>
