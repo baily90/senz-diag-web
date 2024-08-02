@@ -119,7 +119,7 @@ export default {
     })
   },
   // 获取历史报告列表
-  getHistoryReportList ({page, ...params}) {
+  getHistoryReportList ({ page, ...params }) {
     return request({
       url: `/diag_doctor/report_list/${page}`,
       method: 'get',

@@ -11,7 +11,7 @@
       destroy-on-close
       center
       :append-to-body="true"
-      @close="visible = false"
+      :show-close="false"
     >
       <el-tabs>
         <el-tab-pane

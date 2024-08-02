@@ -18,7 +18,7 @@
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import API from '@/api/report'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useReportStore } from '@/store/report'
 import ReportMain from '@/components/ReportMain/index.vue'
 import ReportMedia from './components/ReportMedia/index.vue'
@@ -48,6 +48,16 @@ const getEditReportInfo = async () => {
   }
 }
 getEditReportInfo()
+
+// 离开诊断要把当前报告取消诊断放回需求池，否则会占用报告分配的诊断时长（默认十分钟）
+onBeforeRouteLeave(async (to, from, next) => {
+  try {
+    await API.cancleReport({ diag_id: report.value?.diag_id })
+  } catch (error) {
+  } finally {
+    next()
+  }
+})
 </script>
 
 <style lang="less" scoped>

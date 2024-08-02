@@ -9,8 +9,10 @@
     :show-close="false"
     center
     :append-to-body="true">
-      当前报告已处理超过10分钟，是否继续处理<br/>
-      {{time}}秒后将报告退回平台，并回到首页
+      <div style="text-align: center; line-height: 28px;">
+        当前报告已处理超过10分钟，是否继续处理?<br/>
+      <span style="color: red">{{time}}秒</span>后将报告退回平台并回到首页
+      </div>
     <template #footer>
       <el-button type="primary" :loading="isLoading" @click="continueReport">继续处理</el-button>
     </template>
@@ -43,7 +45,7 @@ const remainTime = ref(0) // 报告剩余处理时间（秒）
 
 watch(() => report.value, (val) => {
   if (val?.remain_time) {
-    remainTime.value = val?.remain_time - 50
+    remainTime.value = val?.remain_time - 55
     setRemainCountDown()
   }
 })
@@ -73,17 +75,8 @@ const setCountDownNum = async () => {
   timerInterval = setInterval(() => {
     time.value--
     if (time.value <= 0) {
-      cancleReport()
-    }
-  }, 1000)
-  visible.value = true
-}
-
-const cancleReport = async () => {
-  try {
-    if (timerInterval) clearInterval(timerInterval)
-    const { code } = await API.cancleReport({ diag_id: report.value?.diag_id })
-    if (code === 200) {
+      clearInterval(timerInterval)
+      visible.value = false
       ElNotification({
         message: '由于您处理单个报告已超过10分钟，且未选择继续出报告，系统已将您的报告退回分配列表',
         type: 'warning',
@@ -92,9 +85,8 @@ const cancleReport = async () => {
       })
       router.replace('/')
     }
-  } catch (error) {
-
-  }
+  }, 1000)
+  visible.value = true
 }
 
 const continueReport = async () => {
@@ -104,7 +96,7 @@ const continueReport = async () => {
     if (code === 200) {
       visible.value = false
       if (data.check_id === report.value?.check?.id) {
-        remainTime.value = data.remain_time - 50
+        remainTime.value = data.remain_time - 55
         initialTime.value = dayjs().unix()
         setRemainCountDown()
       } else {

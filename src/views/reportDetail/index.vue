@@ -37,7 +37,7 @@ const getReportDetailInfo = async () => {
       report.value = data
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   } finally {
     loading.value = false
   }

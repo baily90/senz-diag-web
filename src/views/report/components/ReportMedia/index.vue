@@ -31,9 +31,6 @@ const {
 // 报告 sources
 // 历史报告 其他扫查影像ai_source、已选择图片source
 
-
-
-
 </script>
 
 <style lang="less" scoped>

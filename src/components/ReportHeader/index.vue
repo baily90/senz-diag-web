@@ -1,12 +1,13 @@
 <template>
   <div class="container-report-header">
-    <div class="report-title">
+    <div class="report-hospital-info">
       <div class="hospital-name">暖欣互联网医院</div>
       <ComUser :actions="['home', 'history', 'update', 'logout']">
         <el-button link style="color:#fff">
-          <el-avatar :size="24" :icon="User" />
+          <!-- <el-avatar :size="24" :icon="User" /> -->
+          <el-icon :size="16"><User /></el-icon>
           <span style="margin: 0 3px 0 5px;">{{name}}</span>
-          <el-icon ><CaretBottom /></el-icon>
+          <el-icon><CaretBottom /></el-icon>
         </el-button>
       </ComUser>
     </div>
@@ -87,7 +88,7 @@ defineProps({
     height: 112px;
     padding: 0 40px;
     color: #FFFFFF;
-    .report-title {
+    .report-hospital-info{
       display: flex;
       align-items: center;
       justify-content: space-between;

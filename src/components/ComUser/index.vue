@@ -1,5 +1,4 @@
 <template>
-  <div class="container-user">
     <el-dropdown trigger="click">
       <slot></slot>
       <template #dropdown>
@@ -34,7 +33,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-  </div>
 </template>
 
 <script setup>
@@ -179,5 +177,4 @@ const onSubmitHandle = async () => {
     console.log(error)
   }
 }
-
 </script>

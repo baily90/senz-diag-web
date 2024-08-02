@@ -55,7 +55,6 @@ const openReport = (id) => {
   window.open(`/report/check/${id}`, '_blank')
 }
 
-
 </script>
 
 <style lang="less" scoped>
