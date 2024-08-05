@@ -19,13 +19,14 @@
 
         <!-- 报告模板 - 肠系膜淋巴结且不为报告详情页才展示 getTemplateMenu -->
         <!-- !disabled && body_region_id === 7 -->
-        <el-button>报告模板</el-button>
+        <!-- <el-button>报告模板</el-button> -->
         <!-- 报告模板 - 可配置报告模板且不为报告详情页才展示 getStructTemplateMenu -->
         <!-- !disabled && isStruct === 1 && confTemplate && confTemplate?.length -->
 
+        <el-button @click="togglePlay()">播放</el-button>
+        <el-button @click="togglePlay()">暂停</el-button>
       </div>
-      <el-button @click="play()">播放</el-button>
-      <el-button @click="pause()">暂停</el-button>
+
       <div class="media-area">
         <div class="media">
           <div class="media-video" id="cornerstone"></div>
@@ -34,12 +35,11 @@
           </div>
         </div>
         <div class="media-schedule">
-          <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPlay /></el-icon>
-          00:00
-          <el-slider style="margin: 0 15px;" v-model="curTime" :max="maxTime" @input="onTimeChange" />
-          <!-- 01:00 -->
-        {{remaining}}
-        <!-- frames: {{frame}} -->
+          <!-- <VideoPlay /> -->
+          <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPause /></el-icon>
+          <el-slider v-model="curTime" :max="maxTime" @input="onTimeSliderInput" @change="onTimeSliderChange" />
+        <!-- {{remaining}} -->
+        <!-- cruFrames: {{cruFrames}} -->
         </div>
       </div>
     </div>
@@ -79,14 +79,21 @@ const maxTime = ref(0)
 const remaining = ref(0)
 const cruFrames = ref(0)
 
-const play = () => {
-  viewport.value.play()
-}
-const pause = () => {
-  viewport.value.pause()
+const togglePlay = (toggle = undefined) => {
+  if (toggle === undefined) {
+    toggle = viewport.value.togglePlayPause()
+  } else if (toggle === true) {
+    viewport.value.play()
+  } else {
+    viewport.value.pause()
+  }
 }
 
-const onTimeChange = time => {
+const onTimeSliderInput = time => {
+  viewport.value.setTime(time)
+}
+
+const onTimeSliderChange = (time) => {
   viewport.value.setTime(time)
 }
 
@@ -95,6 +102,7 @@ const initVideo = async () => {
 
   const element = document.getElementById('cornerstone')
   const viewportId = 'CT_AXIAL_STACK'
+
   const renderingEngineId = 'myRenderingEngine'
   const renderingEngine = new RenderingEngine(renderingEngineId)
 
@@ -107,15 +115,18 @@ const initVideo = async () => {
   renderingEngine.enableElement(viewportInput)
 
   viewport.value = renderingEngine.getViewport(viewportId)
+
   await viewport.value.setVideoURL(report.value?.sources?.[0]?.source_url)
   viewport.value.render()
+
+  // viewport.value.play()
 
   element.addEventListener(Enums.Events.IMAGE_RENDERED, (evt) => {
     const { time, duration } = evt.detail
     curTime.value = parseInt(time)
     maxTime.value = parseInt(duration)
-    remaining.value = maxTime.value - curTime.value
-    cruFrames.value = viewport.value.getCurrentImageIdIndex()
+    // remaining.value = maxTime.value - curTime.value
+    // cruFrames.value = viewport.value.getCurrentImageIdIndex()
   })
 }
 
