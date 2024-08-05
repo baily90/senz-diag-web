@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cornerstonejs/core": "^1.83.3",
+    "@cornerstonejs/streaming-image-volume-loader": "^1.83.3",
+    "@cornerstonejs/tools": "^1.83.3",
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",

@@ -10,40 +10,44 @@
       </div>
     </div>
     <div class="media-content">
-      <div class="media-area">
-        <div class="media-tools">
-          <el-button-group>
-            <el-button style="width: 100px;" :type="test ? 'primary' : ''" :icon="EditPen" @click="() => test = !test">{{test ? '取消' : ''}}测量</el-button>
-            <el-button plain :icon="Crop">截图</el-button>
-            <el-button plain :icon="Delete">清除</el-button>
-          </el-button-group>
-          <el-button-group>
-            <!-- 留言 - 报告详情不展示扫查留言 -->
-            <!-- !disabled && tags  -->
-            <el-button>留言</el-button>
+      <div class="media-tools">
+        <el-button-group>
+          <el-button :type="test ? 'primary' : ''" :icon="EditPen" @click="() => test = !test">{{test ? '取消' : ''}}测量</el-button>
+          <el-button plain :icon="Crop">截图</el-button>
+          <el-button plain :icon="Delete">清除</el-button>
+        </el-button-group>
 
-            <!-- 报告模板 - 肠系膜淋巴结且不为报告详情页才展示 getTemplateMenu -->
-            <!-- !disabled && body_region_id === 7 -->
-            <el-button>报告模板</el-button>
+        <!-- 报告模板 - 肠系膜淋巴结且不为报告详情页才展示 getTemplateMenu -->
+        <!-- !disabled && body_region_id === 7 -->
+        <el-button>报告模板</el-button>
+        <!-- 报告模板 - 可配置报告模板且不为报告详情页才展示 getStructTemplateMenu -->
+        <!-- !disabled && isStruct === 1 && confTemplate && confTemplate?.length -->
 
-            <!-- 报告模板 - 可配置报告模板且不为报告详情页才展示 getStructTemplateMenu -->
-            <!-- !disabled && isStruct === 1 && confTemplate && confTemplate?.length -->
-
-          </el-button-group>
-        </div>
-        <div class="media">
-          media
-        </div>
-        <div class="media-schedule">schedule</div>
       </div>
-      <div class="media-scalebar">scalebar</div>
+      <el-button @click="play()">播放</el-button>
+      <el-button @click="pause()">暂停</el-button>
+      <div class="media-area">
+        <div class="media">
+          <div class="media-video" id="cornerstone"></div>
+          <div class="media-scalebar">
+            <el-slider v-model="test1" vertical height="100%" :min=10 :max=300 />
+          </div>
+        </div>
+        <div class="media-schedule">
+          <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPlay /></el-icon>
+          00:00
+          <el-slider style="margin: 0 15px;" v-model="curTime" :max="maxTime" @input="onTimeChange" />
+          <!-- 01:00 -->
+        {{remaining}}
+        <!-- frames: {{frame}} -->
+        </div>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import API from '@/api/report'
 import { useRoute, useRouter } from 'vue-router'
@@ -51,10 +55,13 @@ import { useReportStore } from '@/store/report'
 import IconSelected from '@/assets/image/icon_selected.png'
 import IconUnSelected from '@/assets/image/icon_unselected.png'
 import { EditPen, Crop, Delete } from '@element-plus/icons-vue'
+import {
+  RenderingEngine,
+  Enums,
+  init
+} from '@cornerstonejs/core'
 
 const route = useRoute()
-
-const test = ref(false)
 
 const reportStore = useReportStore()
 const {
@@ -62,8 +69,59 @@ const {
   report
 } = storeToRefs(reportStore)
 
-// 报告 sources
-// 历史报告 其他扫查影像ai_source、已选择图片source
+const test = ref(false)
+const test1 = ref(0)
+
+const viewport = ref(null)
+
+const curTime = ref(0)
+const maxTime = ref(0)
+const remaining = ref(0)
+const cruFrames = ref(0)
+
+const play = () => {
+  viewport.value.play()
+}
+const pause = () => {
+  viewport.value.pause()
+}
+
+const onTimeChange = time => {
+  viewport.value.setTime(time)
+}
+
+const initVideo = async () => {
+  await init()
+
+  const element = document.getElementById('cornerstone')
+  const viewportId = 'CT_AXIAL_STACK'
+  const renderingEngineId = 'myRenderingEngine'
+  const renderingEngine = new RenderingEngine(renderingEngineId)
+
+  const { ViewportType } = Enums
+  const viewportInput = {
+    viewportId,
+    type: ViewportType.VIDEO,
+    element
+  }
+  renderingEngine.enableElement(viewportInput)
+
+  viewport.value = renderingEngine.getViewport(viewportId)
+  await viewport.value.setVideoURL(report.value?.sources?.[0]?.source_url)
+  viewport.value.render()
+
+  element.addEventListener(Enums.Events.IMAGE_RENDERED, (evt) => {
+    const { time, duration } = evt.detail
+    curTime.value = parseInt(time)
+    maxTime.value = parseInt(duration)
+    remaining.value = maxTime.value - curTime.value
+    cruFrames.value = viewport.value.getCurrentImageIdIndex()
+  })
+}
+
+watch(() => report.value, () => {
+  initVideo()
+})
 
 </script>
 
@@ -127,28 +185,38 @@ const {
     flex: 1;
     display: flex;
     align-items: stretch;
+    flex-flow: column nowrap;
     width: 100%;
     padding: 10px 0;
-    background-color: aliceblue;
+
+    .media-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-right: 45px;
+    }
     .media-area {
-      flex: 1;
-      .media-tools {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-      }
+      margin-top: 10px;
       .media {
-        width: 100%;
+        display: flex;
+        .media-video {
+          width: var(--media-width);
+          height: var(--media-height);
+          // background-color: black;
+        }
+        .media-scalebar {
+          width: 45px;
+        }
       }
       .media-schedule {
+        display: flex;
+        align-items: center;
         width: 100%;
+        padding: 10px 55px 0 10px;
+        font-size: 12px;
       }
     }
-    .media-scalebar {
-      width: 45px;
-    }
-
   }
 }
 </style>

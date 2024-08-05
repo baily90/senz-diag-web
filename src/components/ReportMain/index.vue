@@ -32,11 +32,10 @@ const {
   height: 100%;
   overflow: hidden;
   .container-report-media  {
-    flex: 5;
     background-color: #F7FBFF;
   }
   .container-report-form {
-    flex: 4;
+    flex: 1;
   }
 }
 </style>
