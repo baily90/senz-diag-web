@@ -79,22 +79,12 @@ export default {
       const element = cornerstoneElement.value
       renderingEngine.value = new RenderingEngine(renderingEngineId)
 
-      // const viewport = {
-      //   viewportId,
-      //   element,
-      //   type: Enums.ViewportType.STACK
-      // }
-
-      // renderingEngine.value.enableElement(viewport)
-
-      renderingEngine.value.setViewports([
-        {
-          viewportId,
-          element,
-          type: Enums.ViewportType.ORTHOGRAPHIC
-        }
-      ])
-
+      const viewportInput = {
+        viewportId,
+        element,
+        type: Enums.ViewportType.STACK
+      }
+      renderingEngine.value.enableElement(viewportInput)
       // const toolGroupId = 'myToolGroup'
       // const toolGroup = ToolGroupManager.createToolGroup(toolGroupId)
       // toolGroup.addTool(LengthTool.toolName)
@@ -102,10 +92,10 @@ export default {
       //   bindings: [{ mouseButton: ToolsEnums.MouseBindings.Primary }]
       // })
 
-      renderingEngine.value.render()
+      renderFrame()
     }
 
-    const renderFrame = () => {
+    const renderFrame = async () => {
       if (!isPlaying.value) return
 
       const canvas = document.createElement('canvas')
@@ -117,7 +107,7 @@ export default {
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
 
       const image = {
-        imageId,
+        imageId: 'canvas:videoFrame',
         minPixelValue: 0,
         maxPixelValue: 255,
         slope: 1,
@@ -131,15 +121,15 @@ export default {
         sizeInBytes: imageData.data.byteLength
       }
 
-      imageLoader.registerImageLoader(imageId, () => Promise.resolve(image))
+      imageLoader.registerImageLoader('canvas', () => ({promise: Promise.resolve(image)}))
 
-      // const viewport = renderingEngine.value.getViewport(viewportId)
-      // viewport.setStack('videoFrame', 1)
-      // renderingEngine.value.render()
-      cornerstone.setVolumesForViewports(
-        [{ imageId, volumeId: imageId }],
-        [viewportId]
-      )
+      const loadedImage = await imageLoader.loadImage('canvas:videoFrame')
+      console.log(loadedImage);
+
+      const viewport = renderingEngine.value.getViewport(viewportId)
+      viewport.setStack([loadedImage], 0)
+
+      renderingEngine.value.render()
 
       requestAnimationFrame(renderFrame)
     }
@@ -170,8 +160,8 @@ export default {
 
 <style>
 .cornerstone-element {
-  width: 500px;
-  height: 500px;
+  width: 300px;
+  height: 300px;
   border: 1px solid red;
 }
 
