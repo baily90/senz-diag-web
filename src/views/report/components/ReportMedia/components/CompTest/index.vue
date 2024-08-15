@@ -27,11 +27,11 @@ export default {
     const renderingEngine = ref(null)
     const renderingEngineId = 'myRenderingEngine'
     const viewportId = 'myViewport'
-    const imageId = 'videoFrame'
 
     const loadVideo = () => {
       videoElement.value = document.createElement('video')
       videoElement.value.src = '/test1.mp4'
+      document.body.appendChild(videoElement.value)
       videoElement.value.load()
       videoElement.value.onloadedmetadata = () => {
         duration.value = videoElement.value.duration
@@ -92,7 +92,6 @@ export default {
       //   bindings: [{ mouseButton: ToolsEnums.MouseBindings.Primary }]
       // })
 
-      renderFrame()
     }
 
     const renderFrame = async () => {
@@ -124,7 +123,6 @@ export default {
       imageLoader.registerImageLoader('canvas', () => ({promise: Promise.resolve(image)}))
 
       const loadedImage = await imageLoader.loadImage('canvas:videoFrame')
-      console.log(loadedImage);
 
       const viewport = renderingEngine.value.getViewport(viewportId)
       viewport.setStack([loadedImage], 0)
