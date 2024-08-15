@@ -29,15 +29,15 @@
 
       <div class="media-area">
         <div class="media">
-          <div class="media-video" id="cornerstone"></div>
+          <CompTest />
           <div class="media-scalebar">
             <el-slider v-model="test1" vertical height="100%" :min=10 :max=300 />
           </div>
         </div>
         <div class="media-schedule">
           <!-- <VideoPlay /> -->
-          <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPause /></el-icon>
-          <el-slider v-model="curTime" :max="maxTime" @input="onTimeSliderInput" @change="onTimeSliderChange" />
+          <!-- <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPause /></el-icon> -->
+          <!-- <el-slider v-model="curTime" :max="maxTime" @input="onTimeSliderInput" @change="onTimeSliderChange" /> -->
         <!-- {{remaining}} -->
         <!-- cruFrames: {{cruFrames}} -->
         </div>
@@ -55,11 +55,7 @@ import { useReportStore } from '@/store/report'
 import IconSelected from '@/assets/image/icon_selected.png'
 import IconUnSelected from '@/assets/image/icon_unselected.png'
 import { EditPen, Crop, Delete } from '@element-plus/icons-vue'
-import {
-  RenderingEngine,
-  Enums,
-  init
-} from '@cornerstonejs/core'
+import CompTest from './components/CompTest/index.vue'
 
 const route = useRoute()
 
@@ -72,67 +68,8 @@ const {
 const test = ref(false)
 const test1 = ref(0)
 
-const viewport = ref(null)
-
 const curTime = ref(0)
 const maxTime = ref(0)
-const remaining = ref(0)
-const cruFrames = ref(0)
-
-const togglePlay = (toggle = undefined) => {
-  if (toggle === undefined) {
-    toggle = viewport.value.togglePlayPause()
-  } else if (toggle === true) {
-    viewport.value.play()
-  } else {
-    viewport.value.pause()
-  }
-}
-
-const onTimeSliderInput = time => {
-  viewport.value.setTime(time)
-}
-
-const onTimeSliderChange = (time) => {
-  viewport.value.setTime(time)
-}
-
-const initVideo = async () => {
-  await init()
-
-  const element = document.getElementById('cornerstone')
-  const viewportId = 'CT_AXIAL_STACK'
-
-  const renderingEngineId = 'myRenderingEngine'
-  const renderingEngine = new RenderingEngine(renderingEngineId)
-
-  const { ViewportType } = Enums
-  const viewportInput = {
-    viewportId,
-    type: ViewportType.VIDEO,
-    element
-  }
-  renderingEngine.enableElement(viewportInput)
-
-  viewport.value = renderingEngine.getViewport(viewportId)
-
-  await viewport.value.setVideoURL(report.value?.sources?.[0]?.source_url)
-  viewport.value.render()
-
-  // viewport.value.play()
-
-  element.addEventListener(Enums.Events.IMAGE_RENDERED, (evt) => {
-    const { time, duration } = evt.detail
-    curTime.value = parseInt(time)
-    maxTime.value = parseInt(duration)
-    // remaining.value = maxTime.value - curTime.value
-    // cruFrames.value = viewport.value.getCurrentImageIdIndex()
-  })
-}
-
-watch(() => report.value, () => {
-  initVideo()
-})
 
 </script>
 

@@ -7,6 +7,7 @@ import 'element-plus/dist/index.css'
 import 'normalize.css'
 import 'nprogress/nprogress.css'
 import '@/assets/style/main.less'
+import 'default-passive-events'
 
 const app = createApp(App)
 
