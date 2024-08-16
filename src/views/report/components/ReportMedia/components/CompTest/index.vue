@@ -31,7 +31,7 @@ export default {
     const loadVideo = () => {
       videoElement.value = document.createElement('video')
       videoElement.value.src = '/test1.mp4'
-      document.body.appendChild(videoElement.value)
+      // document.body.appendChild(videoElement.value)
       videoElement.value.load()
       videoElement.value.onloadedmetadata = () => {
         duration.value = videoElement.value.duration
@@ -58,6 +58,7 @@ export default {
 
     const seekVideo = () => {
       videoElement.value.currentTime = currentTime.value
+      renderFrame()
     }
 
     const zoomIn = () => {
@@ -91,12 +92,10 @@ export default {
       // toolGroup.setToolActive(LengthTool.toolName, {
       //   bindings: [{ mouseButton: ToolsEnums.MouseBindings.Primary }]
       // })
-
+      // toolGroup.addViewport(viewportId, renderingEngineId)
     }
 
     const renderFrame = async () => {
-      if (!isPlaying.value) return
-
       const canvas = document.createElement('canvas')
       const context = canvas.getContext('2d')
       canvas.width = videoElement.value.videoWidth
@@ -120,15 +119,18 @@ export default {
         sizeInBytes: imageData.data.byteLength
       }
 
-      imageLoader.registerImageLoader('canvas', () => ({promise: Promise.resolve(image)}))
+      imageLoader.registerImageLoader('canvas', () => ({ promise: Promise.resolve(image) }))
 
-      const loadedImage = await imageLoader.loadImage('canvas:videoFrame')
+      // const loadedImage = await imageLoader.loadImage('canvas:videoFrame')
+      // console.log(loadedImage)
 
       const viewport = renderingEngine.value.getViewport(viewportId)
-      viewport.setStack([loadedImage], 0)
+      viewport.setStack(['canvas:videoFrame'], 0)
+      // console.log(viewport)
 
       renderingEngine.value.render()
 
+      if (!isPlaying.value) return
       requestAnimationFrame(renderFrame)
     }
 
