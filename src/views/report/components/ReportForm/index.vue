@@ -1,26 +1,26 @@
 <template>
   <div class="container-report-form">
     <el-button class="btn-preview" type="primary" @click="onPreviewReport()">预览报告</el-button>
-    <el-tabs v-model="tabActiveName">
-      <el-tab-pane name="cssj">
+    <el-tabs v-model="firstTabIndex">
+      <el-tab-pane :name="0">
         <template #label>
           <div class="label">超声所见</div>
         </template>
         <CSSJ />
       </el-tab-pane>
-      <el-tab-pane name="csts">
+      <el-tab-pane :name="1">
         <template #label>
           <div class="label">超声提示</div>
         </template>
         <CSTS ref="cstsFormRef" />
       </el-tab-pane>
-      <el-tab-pane name="jkjy">
+      <el-tab-pane :name="2">
         <template #label>
           <div class="label">健康建议</div>
         </template>
         <JKJY ref="jkjyFormRef" />
       </el-tab-pane>
-      <el-tab-pane name="ysqm">
+      <el-tab-pane :name="3">
         <template #label>
           <div class="label">医师签名</div>
         </template>
@@ -41,7 +41,7 @@ import YSQM from './components/YSQM/index.vue'
 
 const reportStore = useReportStore()
 const {
-  tabActiveName
+  firstTabIndex
 } = storeToRefs(reportStore)
 
 const jkjyFormRef = ref(null)
@@ -60,12 +60,12 @@ const onPreviewReport = async () => {
             ...ysqmFormRef.value.formData
           })
         }
-        tabActiveName.value = 'ysqm'
+        firstTabIndex.value = 3
       } else {
-        tabActiveName.value = 'jkjy'
+        firstTabIndex.value = 2
       }
     } else {
-      tabActiveName.value = 'csts'
+      firstTabIndex.value = 1
     }
   } catch (error) {
     console.log(error)
