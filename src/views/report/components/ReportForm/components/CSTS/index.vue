@@ -2,29 +2,16 @@
   <div class="container-csts">
     <el-form ref="formRef" :model="formData">
       <el-form-item prop="cs_tips" :rules="[{required: true, message: '请选择超声提示', trigger: 'change'}]">
-        <el-checkbox-group v-model="formData.cs_tips">
-          <el-checkbox label="Option A" value="Value A" v-for="item in [1,1,1]" :key="item">
-            123
-            <el-form-item >
-              <el-select placeholder="请选择" style="width: 150px;" :disabled="![0].includes(formData.cs_tips)">
-                <el-option label="Zone one" value="shanghai" />
-                <el-option label="Zone two" value="beijing" />
-              </el-select>
-            </el-form-item>
-            456
-            <el-form-item >
-              <el-select placeholder="请选择" style="width: 150px;">
-                <el-option label="Zone one" value="shanghai" />
-                <el-option label="Zone two" value="beijing" />
-              </el-select>
-            </el-form-item>
-            789
-            <el-form-item >
-              <el-select placeholder="请选择" style="width: 150px;">
-                <el-option label="Zone one" value="shanghai" />
-                <el-option label="Zone two" value="beijing" />
-              </el-select>
-            </el-form-item>
+        <el-checkbox-group v-model="formData.head">
+          <el-checkbox label="item" value="item" v-for="item in headOptions" :key="item.value">
+            <div class="check-item" v-for="(child, index) in item.children" :key="index">
+              <div class="check-item-label" v-if="child.type === 'desc'">{{ child.value }}</div>
+              <el-form-item  v-if="child.type === 'checkbox'">
+                <el-select placeholder="请选择" style="width: 150px;">
+                  <el-option v-for="check in child.options" :key="check.value" :label="check.label" :value="check.value"/>
+                </el-select>
+              </el-form-item>
+            </div>
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -42,8 +29,57 @@ const {
   report
 } = storeToRefs(reportStore)
 
+const headOptions = [
+  {
+    label: '0',
+    value: 0,
+    children: [
+      {
+        type: 'desc',
+        value: '123'
+      },
+      {
+        type: 'checkbox',
+        options: [
+          { label: '1-1', value: 1 },
+          { label: '1-2', value: 2 }
+        ]
+      },
+      {
+        type: 'desc',
+        value: '456'
+      },
+      {
+        type: 'checkbox',
+        options: [
+          { label: '2-1', value: 3 },
+          { label: '2-2', value: 4 }
+        ]
+      },
+      {
+        type: 'checkbox',
+        options: [
+          { label: '3-1', value: 5 },
+          { label: '3-2', value: 6 }
+        ]
+      },
+      {
+        type: 'desc',
+        value: '789'
+      }
+    ]
+  }
+  // { label: '1', value: 1 },
+  // { label: '2', value: 2 },
+  // { label: '3', value: 3 },
+  // { label: '4', value: 4 },
+  // { label: '5', value: 5 },
+  // { label: '6', value: 6 }
+]
+
 const formRef = ref(null)
 const formData = ref({
+  head: undefined,
   cs_tips: undefined,
   cs_tip_des: undefined
 })
