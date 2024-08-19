@@ -1,6 +1,8 @@
 <template>
   <div>
     <div ref="cornerstoneElement" class="cornerstone-element"></div>
+    <video id="video" width="300px" height="300px" controls></video>
+
     <div class="controls">
       <button @click="togglePlayPause">{{ isPlaying ? '暂停' : '播放' }}</button>
       <input type="range" min="0" :max="duration" step="0.1" v-model="currentTime" @input="seekVideo" />
@@ -29,8 +31,8 @@ export default {
     const viewportId = 'myViewport'
 
     const loadVideo = () => {
-      videoElement.value = document.createElement('video')
-      videoElement.value.src = '/test1.mp4'
+      videoElement.value = document.getElementById('video')
+      videoElement.value.src = '/test.mp4'
       // document.body.appendChild(videoElement.value)
       videoElement.value.load()
       videoElement.value.onloadedmetadata = () => {
@@ -65,14 +67,16 @@ export default {
       scale.value = Math.min(Number(scale.value + 0.1).toFixed(1), 3)
       const viewport = renderingEngine.value.getViewport(viewportId)
       viewport.setZoom(scale.value)
-      renderingEngine.value.renderViewports([viewport])
+      viewport.render()
+      // renderingEngine.value.renderViewports([viewport])
     }
 
     const zoomOut = () => {
       scale.value = Math.max(Number(scale.value - 0.1).toFixed(1), 0.1)
       const viewport = renderingEngine.value.getViewport(viewportId)
       viewport.setZoom(scale.value)
-      renderingEngine.value.renderViewports([viewport])
+      viewport.render()
+      // renderingEngine.value.renderViewports([viewport])
     }
 
     const initCornerstone = async () => {
@@ -96,8 +100,9 @@ export default {
     }
 
     const renderFrame = async () => {
-      const canvas = document.createElement('canvas')
+      const canvas = document.getElementById('canvas')
       const context = canvas.getContext('2d')
+
       canvas.width = videoElement.value.videoWidth
       canvas.height = videoElement.value.videoHeight
       context.drawImage(videoElement.value, 0, 0, canvas.width, canvas.height)
@@ -110,25 +115,28 @@ export default {
         maxPixelValue: 255,
         slope: 1,
         intercept: 0,
-        windowCenter: 128,
-        windowWidth: 256,
-        rows: canvas.height,
-        columns: canvas.width,
+        // windowCenter: 128,
+        // windowWidth: 256,
         getPixelData: () => imageData.data,
         getCanvas: () => canvas,
+        rows: imageData.height,
+        columns: imageData.width,
+        height: imageData.height,
+        width: imageData.width,
+        color: true,
+        columnPixelSpacing: 1,
+        rowPixelSpacing: 1,
+        invert: false,
         sizeInBytes: imageData.data.byteLength
       }
 
       imageLoader.registerImageLoader('canvas', () => ({ promise: Promise.resolve(image) }))
 
-      // const loadedImage = await imageLoader.loadImage('canvas:videoFrame')
-      // console.log(loadedImage)
+      await imageLoader.loadImage('canvas:videoFrame')
 
       const viewport = renderingEngine.value.getViewport(viewportId)
-      viewport.setStack(['canvas:videoFrame'], 0)
-      // console.log(viewport)
-
-      renderingEngine.value.render()
+      await viewport.setStack(['canvas:videoFrame'])
+      viewport.render()
 
       if (!isPlaying.value) return
       requestAnimationFrame(renderFrame)

@@ -4,7 +4,7 @@
       <ReportMedia />
     </template>
     <template #form>
-      form
+      <ReportForm />
     </template>
   </ReportMain>
 
@@ -22,6 +22,7 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useReportStore } from '@/store/report'
 import ReportMain from '@/components/ReportMain/index.vue'
 import ReportMedia from './components/ReportMedia/index.vue'
+import ReportForm from './components/ReportForm/index.vue'
 import TimeoutTips from './components/TimeoutTips/index.vue'
 import ScanCommentDialog from './components/ScanCommentDialog/index.vue'
 
@@ -40,6 +41,7 @@ const getEditReportInfo = async () => {
     if (code === 200) {
       // 报告详情和历史报告详情共用reportStore, 该自定义字段用于区分是否是历史报告
       data.isHistory = false
+      data.body_region_id = data?.check?.body_region_id
       report.value = data
     }
   } catch (error) {

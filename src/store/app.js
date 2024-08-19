@@ -11,6 +11,7 @@ export const useAppStore = defineStore('app', () => {
   const avator = ref(null)
   const router = useRouter()
 
+  // 非正常离开诊断页面，需要取消诊断重新回到报告池，防止一直被占，这里做了个控制区分是否要调用取消诊断接口
   const requestInvalidRedirect = (path = '/') => {
     router.replace({ path, query: { interceptedByError: true } })
   }

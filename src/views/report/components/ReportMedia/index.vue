@@ -29,15 +29,16 @@
 
       <div class="media-area">
         <div class="media">
-          <CompTest />
+          <div class="media-video"></div>
+          <!-- <CompTest /> -->
           <div class="media-scalebar">
             <el-slider v-model="test1" vertical height="100%" :min=10 :max=300 />
           </div>
         </div>
         <div class="media-schedule">
           <!-- <VideoPlay /> -->
-          <!-- <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPause /></el-icon> -->
-          <!-- <el-slider v-model="curTime" :max="maxTime" @input="onTimeSliderInput" @change="onTimeSliderChange" /> -->
+          <el-icon style="margin-right: 15px;" :size="24" color="#007BFE"><VideoPause /></el-icon>
+          <el-slider v-model="curTime" :max="maxTime" />
         <!-- {{remaining}} -->
         <!-- cruFrames: {{cruFrames}} -->
         </div>
@@ -151,7 +152,7 @@ const maxTime = ref(0)
         .media-video {
           width: var(--media-width);
           height: var(--media-height);
-          // background-color: black;
+          background-color: black;
         }
         .media-scalebar {
           width: 45px;

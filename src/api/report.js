@@ -62,6 +62,13 @@ export default {
       data
     })
   },
+  // 获取登录用户信息
+  getUserInfo () {
+    return request({
+      url: '/diag_doctor/mine',
+      method: 'get'
+    })
+  },
   // 获取历史报告已标注的信息
   getMarkData (params) {
     return request({

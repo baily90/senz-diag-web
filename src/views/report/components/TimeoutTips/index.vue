@@ -23,6 +23,7 @@
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useReportStore } from '@/store/report'
+import { useAppStore } from '@/store/app'
 import dayjs from 'dayjs'
 import { ElMessage, ElNotification } from 'element-plus'
 import API from '@/api/report'
@@ -32,11 +33,12 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const initialTime = ref(dayjs().unix())
 const reportStore = useReportStore()
-
+const appStore = useAppStore()
 const {
   report,
   loading
 } = storeToRefs(reportStore)
+const { requestInvalidRedirect } = appStore
 
 const visible = ref(false)
 let remainInterval, timerInterval
@@ -83,7 +85,7 @@ const setCountDownNum = async () => {
         duration: 5000,
         showClose: true
       })
-      router.replace('/')
+      requestInvalidRedirect('/')
     }
   }, 1000)
   visible.value = true
