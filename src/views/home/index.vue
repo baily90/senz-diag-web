@@ -95,6 +95,7 @@ const onReportDealHandle = async () => {
         font-size: 45px;
         line-height: 59px;
         color: var(--el-color-primary);
+        font-weight: bolder;
       }
       .label {
         display: flex;
@@ -121,6 +122,7 @@ const onReportDealHandle = async () => {
         font-size: 36px;
         color: #2C2F32;
         line-height: 45px;
+        font-weight: bolder;
       }
       .label {
         font-size: 14px;

@@ -2,7 +2,7 @@
   <div>
     <div ref="cornerstoneElement" class="cornerstone-element"></div>
     <video id="video" width="300px" height="300px" controls></video>
-
+    <canvas id="canvas"></canvas>
     <div class="controls">
       <button @click="togglePlayPause">{{ isPlaying ? '暂停' : '播放' }}</button>
       <input type="range" min="0" :max="duration" step="0.1" v-model="currentTime" @input="seekVideo" />

@@ -3,6 +3,7 @@
     <el-form ref="formRef" :model="formData">
       <el-form-item prop="cs_tips" :rules="[{required: true, message: '请选择超声提示', trigger: 'change'}]">
         <el-checkbox-group v-model="formData.head">
+
           <el-checkbox label="item" value="item" v-for="item in headOptions" :key="item.value">
             <div class="check-item" v-for="(child, index) in item.children" :key="index">
               <div class="check-item-label" v-if="child.type === 'desc'">{{ child.value }}</div>
@@ -13,6 +14,7 @@
               </el-form-item>
             </div>
           </el-checkbox>
+
         </el-checkbox-group>
       </el-form-item>
     </el-form>

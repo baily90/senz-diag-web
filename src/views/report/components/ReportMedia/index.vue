@@ -29,8 +29,8 @@
 
       <div class="media-area">
         <div class="media">
-          <div class="media-video"></div>
-          <!-- <CompTest /> -->
+          <!-- <div class="media-video"></div> -->
+          <CompTest />
           <div class="media-scalebar">
             <el-slider v-model="test1" vertical height="100%" :min=10 :max=300 />
           </div>
