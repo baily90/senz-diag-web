@@ -90,6 +90,7 @@ export default {
         type: Enums.ViewportType.STACK
       }
       renderingEngine.value.enableElement(viewportInput)
+
       // const toolGroupId = 'myToolGroup'
       // const toolGroup = ToolGroupManager.createToolGroup(toolGroupId)
       // toolGroup.addTool(LengthTool.toolName)
@@ -101,16 +102,17 @@ export default {
 
     const renderFrame = async () => {
       const canvas = document.getElementById('canvas')
-      const context = canvas.getContext('2d')
+      const context = canvas.getContext('2d', { willReadFrequently: true })
 
       canvas.width = videoElement.value.videoWidth
       canvas.height = videoElement.value.videoHeight
       context.drawImage(videoElement.value, 0, 0, canvas.width, canvas.height)
 
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+      const timeStamp = performance.now()
 
       const image = {
-        imageId: 'canvas:videoFrame',
+        imageId: 'canvas:videoFrame_' + timeStamp,
         minPixelValue: 0,
         maxPixelValue: 255,
         slope: 1,
@@ -130,12 +132,12 @@ export default {
         sizeInBytes: imageData.data.byteLength
       }
 
-      imageLoader.registerImageLoader('canvas', () => ({ promise: Promise.resolve(image) }))
-
-      await imageLoader.loadImage('canvas:videoFrame')
+      imageLoader.registerImageLoader('canvas', () => {
+        return { promise: Promise.resolve(image) }
+      })
 
       const viewport = renderingEngine.value.getViewport(viewportId)
-      await viewport.setStack(['canvas:videoFrame'])
+      await viewport.setStack([image.imageId])
       viewport.render()
 
       if (!isPlaying.value) return
