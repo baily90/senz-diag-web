@@ -1,32 +1,39 @@
 <template>
   <div class="container-report-form">
-    <el-button class="btn-preview" type="primary" @click="onPreviewReport()">预览报告</el-button>
-    <el-tabs v-model="firstTabIndex">
-      <el-tab-pane :name="0">
-        <template #label>
-          <div class="label">超声所见</div>
-        </template>
-        <CSSJ />
-      </el-tab-pane>
-      <el-tab-pane :name="1">
-        <template #label>
-          <div class="label">超声提示</div>
-        </template>
-        <CSTS ref="cstsFormRef" />
-      </el-tab-pane>
-      <el-tab-pane :name="2">
-        <template #label>
-          <div class="label">健康建议</div>
-        </template>
-        <JKJY ref="jkjyFormRef" />
-      </el-tab-pane>
-      <el-tab-pane :name="3">
-        <template #label>
-          <div class="label">医师签名</div>
-        </template>
-        <YSQM ref="ysqmFormRef" />
-      </el-tab-pane>
-    </el-tabs>
+    <el-form
+      ref="formRef"
+      :model="formData"
+    >
+      <el-form-item prop="name" label="姓名" :rules="[{required: true,message: '请输入姓名',trigger: 'blur'}]">
+        <el-input v-model="formData.name" />
+      </el-form-item>
+
+      <el-form-item prop="hobbies" label="爱好" :rules="[{required: true,message: '请选择爱好',trigger: 'change'}]">
+        <el-checkbox-group v-model="formData.hobbies">
+          <el-form-item :prop="'hobbies.'+hobbyIndex+'.value'" v-for="(hobby, hobbyIndex) in formData.hobbies" :key="hobbyIndex">
+            <el-checkbox label="体能" :value="1" />
+            <el-select
+              v-model="hobby.value"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+
+          <!-- <el-checkbox label="足球" />
+          <el-checkbox label="乒乓球" /> -->
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item>
+        {{formData}}
+        <el-button type="primary" @click="submitForm">Submit</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -34,41 +41,36 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useReportStore } from '@/store/report'
-import CSSJ from './components/CSSJ/index.vue'
-import CSTS from './components/CSTS/index.vue'
-import JKJY from './components/JKJY/index.vue'
-import YSQM from './components/YSQM/index.vue'
 
 const reportStore = useReportStore()
 const {
-  firstTabIndex
+  report
 } = storeToRefs(reportStore)
 
-const jkjyFormRef = ref(null)
-const ysqmFormRef = ref(null)
-const cstsFormRef = ref(null)
-const onPreviewReport = async () => {
-  try {
-    const cstsFlag = await cstsFormRef.value.validate()
-    if (cstsFlag) {
-      const jkjyFlag = await jkjyFormRef.value.validate()
-      if (jkjyFlag) {
-        const jsqmFlag = await ysqmFormRef.value.validate()
-        if (jsqmFlag) {
-          console.log({
-            ...jkjyFormRef.value.formData,
-            ...ysqmFormRef.value.formData
-          })
-        }
-        firstTabIndex.value = 3
-      } else {
-        firstTabIndex.value = 2
-      }
-    } else {
-      firstTabIndex.value = 1
+const formRef = ref(null)
+const formData = ref({
+  name: '111',
+  hobbies: [
+    {
+      label: '体能',
+      value: [
+
+      ]
     }
+  ]
+})
+
+const options = ref([
+  { label: '选项1', value: 1 },
+  { label: '选项2', value: 2 }
+])
+const submitForm = async () => {
+  if (!formRef.value) return
+  try {
+    await formRef.value.validate()
+    console.log(formData.value)
   } catch (error) {
-    console.log(error)
+
   }
 }
 </script>
@@ -78,31 +80,5 @@ const onPreviewReport = async () => {
   position: relative;
   width: 100%;
   padding: 0 10px;
-
-  .btn-preview {
-    position: absolute;
-    top: 6px;
-    right: 10px;
-    z-index: 1;
-  }
-  .label {
-    font-size: 15px;
-  }
-
-  :deep(.el-tabs__header) {
-    margin: 0;
-  }
-  :deep(.el-tabs__item) {
-    padding: 0 10px;
-  }
-  :deep(.el-tabs__content) {
-    height: calc(100vh - 182px);
-    padding: 15px 0 0 0;
-    overflow: auto;
-  }
-  :deep(.el-tabs__nav-wrap::after) {
-    display: none;
-  }
-
 }
 </style>
